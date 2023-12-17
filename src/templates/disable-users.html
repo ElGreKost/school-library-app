@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disable Users</title>
+    <style>
+        label[for=disable]{
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1> Valid Users </h1>
+    <form method="post">
+        <ul id="ValidUsers">
+            <!-- Here will be positioned the notValidUsers with accept inputs-->
+        </ul>
+        <input type="submit" value="Disable selected users">
+        </form>
+</body>
+<script>
+    listRoot = document.getElementById('ValidUsers')
+    fetch('/librarian/{{lib_username}}/ValidUsers')
+        .then(response => response.json())
+        .then(Users => {
+            console.log(Users); 
+            const myList = Users.Users.map(item => item);
+            console.log(myList); 
+            for (let user of myList){
+            let option = document.createElement("li");
+            option.value = user;
+            option.textContent = user[0]  + ' ' + user[1] + ' School: ' + user[2];
+            
+            let labelDisable = document.createElement('label');
+            labelDisable.setAttribute('for', 'disable')
+            labelDisable.textContent = 'disable';
+
+            let disable= document.createElement("input");
+            disable.setAttribute('type','radio');
+            disable.setAttribute('name', user[0]);
+            disable.setAttribute('value','disable');
+            
+            option.appendChild(disable);
+            option.appendChild(labelDisable);
+            
+            listRoot.appendChild(option);
+        }
+        });
+</script>
+</html>
